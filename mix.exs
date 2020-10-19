@@ -1,16 +1,16 @@
-defmodule ABI.Mixfile do
+defmodule SolABI.Mixfile do
   use Mix.Project
 
   def project do
     [
-      app: :abi,
+      app: :sol_abi,
       version: "0.1.17",
       elixir: "~> 1.7",
       description: "Ethereum's ABI Interface",
       package: [
-        maintainers: ["Geoffrey Hayes", "Mason Fischer"],
+        maintainers: ["Alex Kwiatkowski"],
         licenses: ["MIT"],
-        links: %{"GitHub" => "https://github.com/exthereum/abi"}
+        links: %{"GitHub" => "https://github.com/fremantle-industries/sol_abi"}
       ],
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,

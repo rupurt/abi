@@ -1,6 +1,6 @@
-defmodule ABI.TypeEncoder do
+defmodule SolABI.TypeEncoder do
   @moduledoc """
-  `ABI.TypeEncoder` is responsible for encoding types to the format
+  `SolABI.TypeEncoder` is responsible for encoding types to the format
   expected by Solidity. We generally take a function selector and an
   array of data and encode that array according to the specification.
   """
@@ -11,8 +11,8 @@ defmodule ABI.TypeEncoder do
   ## Examples
 
       iex> [69, true]
-      ...> |> ABI.TypeEncoder.encode(
-      ...>      %ABI.FunctionSelector{
+      ...> |> SolABI.TypeEncoder.encode(
+      ...>      %SolABI.FunctionSelector{
       ...>        function: "baz",
       ...>        types: [
       ...>          {:uint, 32},
@@ -25,8 +25,8 @@ defmodule ABI.TypeEncoder do
       "cdcd77c000000000000000000000000000000000000000000000000000000000000000450000000000000000000000000000000000000000000000000000000000000001"
 
       iex> ["BAT"]
-      ...> |> ABI.TypeEncoder.encode(
-      ...>      %ABI.FunctionSelector{
+      ...> |> SolABI.TypeEncoder.encode(
+      ...>      %SolABI.FunctionSelector{
       ...>        function: "price",
       ...>        types: [
       ...>          :string
@@ -38,8 +38,8 @@ defmodule ABI.TypeEncoder do
       "fe2c6198000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000034241540000000000000000000000000000000000000000000000000000000000"
 
       iex> ["hello world"]
-      ...> |> ABI.TypeEncoder.encode(
-      ...>      %ABI.FunctionSelector{
+      ...> |> SolABI.TypeEncoder.encode(
+      ...>      %SolABI.FunctionSelector{
       ...>        function: nil,
       ...>        types: [
       ...>          :string,
@@ -50,8 +50,8 @@ defmodule ABI.TypeEncoder do
       "000000000000000000000000000000000000000000000000000000000000000b68656c6c6f20776f726c64000000000000000000000000000000000000000000"
 
       iex> [{"awesome", true}]
-      ...> |> ABI.TypeEncoder.encode(
-      ...>      %ABI.FunctionSelector{
+      ...> |> SolABI.TypeEncoder.encode(
+      ...>      %SolABI.FunctionSelector{
       ...>        function: nil,
       ...>        types: [
       ...>          {:tuple, [:string, :bool]}
@@ -62,8 +62,8 @@ defmodule ABI.TypeEncoder do
       "000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000007617765736f6d6500000000000000000000000000000000000000000000000000"
 
       iex> [{17, true, <<32, 64>>}]
-      ...> |> ABI.TypeEncoder.encode(
-      ...>      %ABI.FunctionSelector{
+      ...> |> SolABI.TypeEncoder.encode(
+      ...>      %SolABI.FunctionSelector{
       ...>        function: nil,
       ...>        types: [
       ...>          {:tuple, [{:uint, 32}, :bool, {:bytes, 2}]}
@@ -74,8 +74,8 @@ defmodule ABI.TypeEncoder do
       "000000000000000000000000000000000000000000000000000000000000001100000000000000000000000000000000000000000000000000000000000000012040000000000000000000000000000000000000000000000000000000000000"
 
       iex> [[17, 1]]
-      ...> |> ABI.TypeEncoder.encode(
-      ...>      %ABI.FunctionSelector{
+      ...> |> SolABI.TypeEncoder.encode(
+      ...>      %SolABI.FunctionSelector{
       ...>        function: "baz",
       ...>        types: [
       ...>          {:array, {:uint, 32}, 2}
@@ -86,8 +86,8 @@ defmodule ABI.TypeEncoder do
       "3d0ec53300000000000000000000000000000000000000000000000000000000000000110000000000000000000000000000000000000000000000000000000000000001"
 
       iex> [[17, 1], true]
-      ...> |> ABI.TypeEncoder.encode(
-      ...>      %ABI.FunctionSelector{
+      ...> |> SolABI.TypeEncoder.encode(
+      ...>      %SolABI.FunctionSelector{
       ...>        function: nil,
       ...>        types: [
       ...>          {:array, {:uint, 32}, 2},
@@ -99,8 +99,8 @@ defmodule ABI.TypeEncoder do
       "000000000000000000000000000000000000000000000000000000000000001100000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001"
 
       iex> [[17, 1]]
-      ...> |> ABI.TypeEncoder.encode(
-      ...>      %ABI.FunctionSelector{
+      ...> |> SolABI.TypeEncoder.encode(
+      ...>      %SolABI.FunctionSelector{
       ...>        function: nil,
       ...>        types: [
       ...>          {:array, {:uint, 32}}
@@ -114,23 +114,23 @@ defmodule ABI.TypeEncoder do
     encode_method_id(function_selector) <> do_encode_data(data, function_selector)
   end
 
-  defp do_encode_data(data, %ABI.FunctionSelector{function: nil}=function_selector) do
+  defp do_encode_data(data, %SolABI.FunctionSelector{function: nil} = function_selector) do
     encode_raw(data, function_selector.types)
   end
 
-  defp do_encode_data(data, %ABI.FunctionSelector{}=function_selector) do
+  defp do_encode_data(data, %SolABI.FunctionSelector{} = function_selector) do
     encode_raw([List.to_tuple(data)], [{:tuple, function_selector.types}])
   end
 
   @doc """
-  Simiar to `ABI.TypeEncoder.encode/2` except we accept
+  Simiar to `SolABI.TypeEncoder.encode/2` except we accept
   an array of types instead of a function selector. We also
   do not pre-pend the method id.
 
   ## Examples
 
       iex> [{"awesome", true}]
-      ...> |> ABI.TypeEncoder.encode_raw([{:tuple, [:string, :bool]}])
+      ...> |> SolABI.TypeEncoder.encode_raw([{:tuple, [:string, :bool]}])
       ...> |> Base.encode16(case: :lower)
       "000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000007617765736f6d6500000000000000000000000000000000000000000000000000"
   """
@@ -138,15 +138,15 @@ defmodule ABI.TypeEncoder do
     do_encode(types, data, [])
   end
 
-  @spec encode_method_id(%ABI.FunctionSelector{}) :: binary()
-  defp encode_method_id(%ABI.FunctionSelector{function: nil}), do: ""
+  @spec encode_method_id(%SolABI.FunctionSelector{}) :: binary()
+  defp encode_method_id(%SolABI.FunctionSelector{function: nil}), do: ""
 
   defp encode_method_id(function_selector) do
     # Encode selector e.g. "baz(uint32,bool)" and take keccak
     kec =
       function_selector
-      |> ABI.FunctionSelector.encode()
-      |> ABI.Math.kec()
+      |> SolABI.FunctionSelector.encode()
+      |> SolABI.Math.kec()
 
     # Take first four bytes
     <<init::binary-size(4), _rest::binary>> = kec
@@ -155,7 +155,7 @@ defmodule ABI.TypeEncoder do
     init
   end
 
-  @spec do_encode([ABI.FunctionSelector.type()], [any()], [binary()]) :: binary()
+  @spec do_encode([SolABI.FunctionSelector.type()], [any()], [binary()]) :: binary()
   defp do_encode([], _, acc), do: :erlang.iolist_to_binary(Enum.reverse(acc))
 
   defp do_encode([type | remaining_types], data, acc) do
@@ -164,7 +164,7 @@ defmodule ABI.TypeEncoder do
     do_encode(remaining_types, remaining_data, [encoded | acc])
   end
 
-  @spec encode_type(ABI.FunctionSelector.type(), [any()]) :: {binary(), [any()]}
+  @spec encode_type(SolABI.FunctionSelector.type(), [any()]) :: {binary(), [any()]}
   defp encode_type({:uint, size}, [data | rest]) do
     {encode_uint(data, size), rest}
   end
@@ -214,7 +214,7 @@ defmodule ABI.TypeEncoder do
                                                                                 tail_position} ->
         {el, rest} = encode_type(type, data)
 
-        if ABI.FunctionSelector.is_dynamic?(type) do
+        if SolABI.FunctionSelector.is_dynamic?(type) do
           # If we're a dynamic type, just encoded the length to head and the element to body
           {head <> encode_uint(tail_position, 256), tail <> el, rest,
            tail_position + byte_size(el)}
@@ -228,11 +228,12 @@ defmodule ABI.TypeEncoder do
   end
 
   defp encode_type({:array, type, element_count}, [data | rest]) do
-    repeated_type = if element_count == 0 do
-      []
-    else
-       Enum.map(1..element_count, fn _ -> type end)
-    end
+    repeated_type =
+      if element_count == 0 do
+        []
+      else
+        Enum.map(1..element_count, fn _ -> type end)
+      end
 
     encode_type({:tuple, repeated_type}, [data |> List.to_tuple() | rest])
   end
@@ -270,8 +271,8 @@ defmodule ABI.TypeEncoder do
   end
 
   defp pad(bin, size_in_bytes, direction) do
-    # TODO: Create `left_pad` repo, err, add to `ABI.Math`
-    total_size = size_in_bytes + ABI.Math.mod(32 - ABI.Math.mod(size_in_bytes, 32), 32)
+    # TODO: Create `left_pad` repo, err, add to `SolABI.Math`
+    total_size = size_in_bytes + SolABI.Math.mod(32 - SolABI.Math.mod(size_in_bytes, 32), 32)
 
     padding_size_bits = (total_size - byte_size(bin)) * 8
     padding = <<0::size(padding_size_bits)>>

@@ -1,6 +1,6 @@
-defmodule ABI.FunctionSelector do
+defmodule SolABI.FunctionSelector do
   @moduledoc """
-  Module to help parse the ABI function signatures, e.g.
+  Module to help parse the SolABI function signatures, e.g.
   `my_function(uint64, string[])`.
   """
 
@@ -29,8 +29,8 @@ defmodule ABI.FunctionSelector do
 
   ## Examples
 
-      iex> ABI.FunctionSelector.decode("bark(uint256,bool)")
-      %ABI.FunctionSelector{
+      iex> SolABI.FunctionSelector.decode("bark(uint256,bool)")
+      %SolABI.FunctionSelector{
         function: "bark",
         types: [
           {:uint, 256},
@@ -38,8 +38,8 @@ defmodule ABI.FunctionSelector do
         ]
       }
 
-      iex> ABI.FunctionSelector.decode("(uint256,bool)")
-      %ABI.FunctionSelector{
+      iex> SolABI.FunctionSelector.decode("(uint256,bool)")
+      %SolABI.FunctionSelector{
         function: nil,
         types: [
           {:uint, 256},
@@ -47,8 +47,8 @@ defmodule ABI.FunctionSelector do
         ]
       }
 
-      iex> ABI.FunctionSelector.decode("growl(uint,address,string[])")
-      %ABI.FunctionSelector{
+      iex> SolABI.FunctionSelector.decode("growl(uint,address,string[])")
+      %SolABI.FunctionSelector{
         function: "growl",
         types: [
           {:uint, 256},
@@ -57,44 +57,44 @@ defmodule ABI.FunctionSelector do
         ]
       }
 
-      iex> ABI.FunctionSelector.decode("rollover()")
-      %ABI.FunctionSelector{
+      iex> SolABI.FunctionSelector.decode("rollover()")
+      %SolABI.FunctionSelector{
         function: "rollover",
         types: []
       }
 
-      iex> ABI.FunctionSelector.decode("do_playDead3()")
-      %ABI.FunctionSelector{
+      iex> SolABI.FunctionSelector.decode("do_playDead3()")
+      %SolABI.FunctionSelector{
         function: "do_playDead3",
         types: []
       }
 
-      iex> ABI.FunctionSelector.decode("pet(address[])")
-      %ABI.FunctionSelector{
+      iex> SolABI.FunctionSelector.decode("pet(address[])")
+      %SolABI.FunctionSelector{
         function: "pet",
         types: [
           {:array, :address}
         ]
       }
 
-      iex> ABI.FunctionSelector.decode("paw(string[2])")
-      %ABI.FunctionSelector{
+      iex> SolABI.FunctionSelector.decode("paw(string[2])")
+      %SolABI.FunctionSelector{
         function: "paw",
         types: [
           {:array, :string, 2}
         ]
       }
 
-      iex> ABI.FunctionSelector.decode("scram(uint256[])")
-      %ABI.FunctionSelector{
+      iex> SolABI.FunctionSelector.decode("scram(uint256[])")
+      %SolABI.FunctionSelector{
         function: "scram",
         types: [
           {:array, {:uint, 256}}
         ]
       }
 
-      iex> ABI.FunctionSelector.decode("shake((string))")
-      %ABI.FunctionSelector{
+      iex> SolABI.FunctionSelector.decode("shake((string))")
+      %SolABI.FunctionSelector{
         function: "shake",
         types: [
           {:tuple, [:string]}
@@ -102,7 +102,7 @@ defmodule ABI.FunctionSelector do
       }
   """
   def decode(signature) do
-    ABI.Parser.parse!(signature, as: :selector)
+    SolABI.Parser.parse!(signature, as: :selector)
   end
 
   @doc """
@@ -110,10 +110,10 @@ defmodule ABI.FunctionSelector do
 
   ## Examples
 
-      iex> ABI.FunctionSelector.decode_raw("string,uint256")
+      iex> SolABI.FunctionSelector.decode_raw("string,uint256")
       [:string, {:uint, 256}]
 
-      iex> ABI.FunctionSelector.decode_raw("")
+      iex> SolABI.FunctionSelector.decode_raw("")
       []
   """
   def decode_raw(type_string) do
@@ -132,7 +132,7 @@ defmodule ABI.FunctionSelector do
     input_types = Enum.map(named_inputs, &parse_specification_type/1)
     output_types = Enum.map(named_outputs, &parse_specification_type/1)
 
-    %ABI.FunctionSelector{
+    %SolABI.FunctionSelector{
       function: function_name,
       types: input_types,
       returns: List.first(output_types)
@@ -140,7 +140,7 @@ defmodule ABI.FunctionSelector do
   end
 
   def parse_specification_item(%{"type" => "fallback"}) do
-    %ABI.FunctionSelector{
+    %SolABI.FunctionSelector{
       function: nil,
       types: [],
       returns: nil
@@ -156,17 +156,17 @@ defmodule ABI.FunctionSelector do
 
   ## Examples
 
-      iex> ABI.FunctionSelector.decode_type("uint256")
+      iex> SolABI.FunctionSelector.decode_type("uint256")
       {:uint, 256}
 
-      iex> ABI.FunctionSelector.decode_type("(bool,address)")
+      iex> SolABI.FunctionSelector.decode_type("(bool,address)")
       {:tuple, [:bool, :address]}
 
-      iex> ABI.FunctionSelector.decode_type("address[][3]")
+      iex> SolABI.FunctionSelector.decode_type("address[][3]")
       {:array, {:array, :address}, 3}
   """
   def decode_type(single_type) do
-    ABI.Parser.parse!(single_type, as: :type)
+    SolABI.Parser.parse!(single_type, as: :type)
   end
 
   @doc """
@@ -174,7 +174,7 @@ defmodule ABI.FunctionSelector do
 
   ## Examples
 
-      iex> ABI.FunctionSelector.encode(%ABI.FunctionSelector{
+      iex> SolABI.FunctionSelector.encode(%SolABI.FunctionSelector{
       ...>   function: "bark",
       ...>   types: [
       ...>     {:uint, 256},
@@ -222,7 +222,7 @@ defmodule ABI.FunctionSelector do
   defp get_type(els), do: raise("Unsupported type: #{inspect(els)}")
 
   @doc false
-  @spec is_dynamic?(ABI.FunctionSelector.type()) :: boolean
+  @spec is_dynamic?(SolABI.FunctionSelector.type()) :: boolean
   def is_dynamic?(:bytes), do: true
   def is_dynamic?(:string), do: true
   def is_dynamic?({:array, _type}), do: true

@@ -1,6 +1,6 @@
-defmodule ABI.TypeDecoder do
+defmodule SolABI.TypeDecoder do
   @moduledoc """
-  `ABI.TypeDecoder` is responsible for decoding types to the format
+  `SolABI.TypeDecoder` is responsible for decoding types to the format
   expected by Solidity. We generally take a function selector and binary
   data and decode that into the original arguments according to the
   specification.
@@ -15,8 +15,8 @@ defmodule ABI.TypeDecoder do
 
       iex> "00000000000000000000000000000000000000000000000000000000000000450000000000000000000000000000000000000000000000000000000000000001"
       ...> |> Base.decode16!(case: :lower)
-      ...> |> ABI.TypeDecoder.decode(
-      ...>      %ABI.FunctionSelector{
+      ...> |> SolABI.TypeDecoder.decode(
+      ...>      %SolABI.FunctionSelector{
       ...>        function: "baz",
       ...>        types: [
       ...>          {:uint, 32},
@@ -29,8 +29,8 @@ defmodule ABI.TypeDecoder do
 
       iex> "000000000000000000000000000000000000000000000000000000000000000b68656c6c6f20776f726c64000000000000000000000000000000000000000000"
       ...> |> Base.decode16!(case: :lower)
-      ...> |> ABI.TypeDecoder.decode(
-      ...>      %ABI.FunctionSelector{
+      ...> |> SolABI.TypeDecoder.decode(
+      ...>      %SolABI.FunctionSelector{
       ...>        function: nil,
       ...>        types: [
       ...>          :string
@@ -41,8 +41,8 @@ defmodule ABI.TypeDecoder do
 
       iex> "00000000000000000000000000000000000000000000000000000000000000110000000000000000000000000000000000000000000000000000000000000001"
       ...> |> Base.decode16!(case: :lower)
-      ...> |> ABI.TypeDecoder.decode(
-      ...>      %ABI.FunctionSelector{
+      ...> |> SolABI.TypeDecoder.decode(
+      ...>      %SolABI.FunctionSelector{
       ...>        function: nil,
       ...>        types: [
       ...>          {:tuple, [{:uint, 32}, :bool]}
@@ -53,8 +53,8 @@ defmodule ABI.TypeDecoder do
 
       iex> "00000000000000000000000000000000000000000000000000000000000000110000000000000000000000000000000000000000000000000000000000000001"
       ...> |> Base.decode16!(case: :lower)
-      ...> |> ABI.TypeDecoder.decode(
-      ...>      %ABI.FunctionSelector{
+      ...> |> SolABI.TypeDecoder.decode(
+      ...>      %SolABI.FunctionSelector{
       ...>        function: nil,
       ...>        types: [
       ...>          {:array, {:uint, 32}, 2}
@@ -65,8 +65,8 @@ defmodule ABI.TypeDecoder do
 
       iex> "000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000110000000000000000000000000000000000000000000000000000000000000001"
       ...> |> Base.decode16!(case: :lower)
-      ...> |> ABI.TypeDecoder.decode(
-      ...>      %ABI.FunctionSelector{
+      ...> |> SolABI.TypeDecoder.decode(
+      ...>      %SolABI.FunctionSelector{
       ...>        function: nil,
       ...>        types: [
       ...>          {:array, {:uint, 32}}
@@ -77,8 +77,8 @@ defmodule ABI.TypeDecoder do
 
       iex> "0000000000000000000000000000000000000000000000000000000000000011000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000011020000000000000000000000000000000000000000000000000000000000000"
       ...> |> Base.decode16!(case: :lower)
-      ...> |> ABI.TypeDecoder.decode(
-      ...>      %ABI.FunctionSelector{
+      ...> |> SolABI.TypeDecoder.decode(
+      ...>      %SolABI.FunctionSelector{
       ...>        function: nil,
       ...>        types: [
       ...>          {:array, {:uint, 32}, 2},
@@ -91,8 +91,8 @@ defmodule ABI.TypeDecoder do
 
       iex> "000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000007617765736f6d6500000000000000000000000000000000000000000000000000"
       ...> |> Base.decode16!(case: :lower)
-      ...> |> ABI.TypeDecoder.decode(
-      ...>      %ABI.FunctionSelector{
+      ...> |> SolABI.TypeDecoder.decode(
+      ...>      %SolABI.FunctionSelector{
       ...>        function: nil,
       ...>        types: [
       ...>          {:tuple, [:string, :bool]}
@@ -103,8 +103,8 @@ defmodule ABI.TypeDecoder do
 
       iex> "00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000"
       ...> |> Base.decode16!(case: :lower)
-      ...> |> ABI.TypeDecoder.decode(
-      ...>      %ABI.FunctionSelector{
+      ...> |> SolABI.TypeDecoder.decode(
+      ...>      %SolABI.FunctionSelector{
       ...>        function: nil,
       ...>        types: [
       ...>          {:tuple, [{:array, :address}]}
@@ -115,8 +115,8 @@ defmodule ABI.TypeDecoder do
 
       iex> "00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000c556e617574686f72697a656400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000204a2bf2ff0a4eaf1890c8d8679eaa446fb852c4000000000000000000000000861d9af488d5fa485bb08ab6912fff4f7450849a"
       ...> |> Base.decode16!(case: :lower)
-      ...> |> ABI.TypeDecoder.decode(
-      ...>      %ABI.FunctionSelector{
+      ...> |> SolABI.TypeDecoder.decode(
+      ...>      %SolABI.FunctionSelector{
       ...>        function: nil,
       ...>        types: [{:tuple,[
       ...>          :string,
@@ -134,8 +134,8 @@ defmodule ABI.TypeDecoder do
 
       iex> "000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000034241540000000000000000000000000000000000000000000000000000000000"
       ...> |> Base.decode16!(case: :lower)
-      ...> |> ABI.TypeDecoder.decode(
-      ...>      %ABI.FunctionSelector{
+      ...> |> SolABI.TypeDecoder.decode(
+      ...>      %SolABI.FunctionSelector{
       ...>        function: "price",
       ...>        types: [
       ...>          :string
@@ -157,21 +157,21 @@ defmodule ABI.TypeDecoder do
   end
 
   @doc """
-  Similar to `ABI.TypeDecoder.decode/2` except accepts a list of types instead
+  Similar to `SolABI.TypeDecoder.decode/2` except accepts a list of types instead
   of a function selector.
 
   ## Examples
 
       iex> "000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000007617765736f6d6500000000000000000000000000000000000000000000000000"
       ...> |> Base.decode16!(case: :lower)
-      ...> |> ABI.TypeDecoder.decode_raw([{:tuple, [:string, :bool]}])
+      ...> |> SolABI.TypeDecoder.decode_raw([{:tuple, [:string, :bool]}])
       [{"awesome", true}]
   """
   def decode_raw(encoded_data, types) do
     do_decode(types, encoded_data, [])
   end
 
-  @spec do_decode([ABI.FunctionSelector.type()], binary(), [any()]) :: [any()]
+  @spec do_decode([SolABI.FunctionSelector.type()], binary(), [any()]) :: [any()]
   defp do_decode([], bin, _) when byte_size(bin) > 0,
     do: raise("Found extra binary data: #{inspect(bin)}")
 
@@ -183,12 +183,12 @@ defmodule ABI.TypeDecoder do
     do_decode(remaining_types, remaining_data, [decoded | acc])
   end
 
-  @spec decode_type(ABI.FunctionSelector.type(), binary()) :: {any(), binary()}
+  @spec decode_type(SolABI.FunctionSelector.type(), binary()) :: {any(), binary()}
   defp decode_type({:uint, size_in_bits}, data) do
     decode_uint(data, size_in_bits)
   end
 
-  @spec decode_type(ABI.FunctionSelector.type(), binary()) :: {any(), binary()}
+  @spec decode_type(SolABI.FunctionSelector.type(), binary()) :: {any(), binary()}
   defp decode_type({:int, size_in_bits}, data) do
     decode_int(data, size_in_bits)
   end
@@ -243,7 +243,7 @@ defmodule ABI.TypeDecoder do
     # First pass, decode static types
     {elements, rest} =
       Enum.reduce(types, {[], starting_data}, fn type, {elements, data} ->
-        if ABI.FunctionSelector.is_dynamic?(type) do
+        if SolABI.FunctionSelector.is_dynamic?(type) do
           {tail_position, rest} = decode_type({:uint, 256}, data)
 
           {[{:dynamic, type, tail_position} | elements], rest}
@@ -277,8 +277,8 @@ defmodule ABI.TypeDecoder do
 
   @spec decode_uint(binary(), integer()) :: {integer(), binary()}
   defp decode_uint(data, size_in_bits) do
-    # TODO: Create `left_pad` repo, err, add to `ABI.Math`
-    total_bit_size = size_in_bits + ABI.Math.mod(256 - size_in_bits, 256)
+    # TODO: Create `left_pad` repo, err, add to `SolABI.Math`
+    total_bit_size = size_in_bits + SolABI.Math.mod(256 - size_in_bits, 256)
 
     <<value::integer-size(total_bit_size), rest::binary>> = data
 
@@ -287,7 +287,7 @@ defmodule ABI.TypeDecoder do
 
   @spec decode_int(binary(), integer()) :: {integer(), binary()}
   defp decode_int(data, size_in_bits) do
-    total_bit_size = size_in_bits + ABI.Math.mod(256 - size_in_bits, 256)
+    total_bit_size = size_in_bits + SolABI.Math.mod(256 - size_in_bits, 256)
     <<value::integer-signed-big-size(total_bit_size), rest::binary>> = data
 
     {value, rest}
@@ -295,8 +295,9 @@ defmodule ABI.TypeDecoder do
 
   @spec decode_bytes(binary(), integer(), atom()) :: {binary(), binary()}
   def decode_bytes(data, size_in_bytes, padding_direction) do
-    # TODO: Create `unright_pad` repo, err, add to `ABI.Math`
-    total_size_in_bytes = size_in_bytes + ABI.Math.mod(32 - ABI.Math.mod(size_in_bytes, 32), 32)
+    # TODO: Create `unright_pad` repo, err, add to `SolABI.Math`
+    total_size_in_bytes =
+      size_in_bytes + SolABI.Math.mod(32 - SolABI.Math.mod(size_in_bytes, 32), 32)
 
     padding_size_in_bytes = total_size_in_bytes - size_in_bytes
 
